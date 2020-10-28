@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -41,76 +44,68 @@ namespace KPandYP_laba7
                                     "Под ним сидел, и кот учёный\n" +
                                     "Свои мне сказки говорил.";
 
-        public static void Zam()
+        public static string[] Zam()
         {
-            StringBuilder[] TempText = new StringBuilder[text.Split(' ').Length];
+            char[] chars = { ';', '.', ',', '!', ':', ' ', '—', '\n'};
+            string[] textWords = text.Split(chars);
 
-            string str = "";
-            int j = 0;
-            for (int i = 0; i < text.Length; ++i)
+            for (int i = 0; i < textWords.Length; ++i)
             {
-                str += text[i];
-                if (text[i] == ' ')
+                if (textWords[i].Length >= 4)
                 {
-                    TempText[j] = new StringBuilder(str);
-                    j++;
-                    str = "";
+                    textWords[i] = textWords[i].Remove(3, 1);
+                    textWords[i] = textWords[i].Insert(3, "#");
+                }
+                if (textWords[i].Length >= 7)
+                {
+                    textWords[i] = textWords[i].Remove(6, 1);
+                    textWords[i] = textWords[i].Insert(6, "#");
                 }
             }
 
-            for (int i = 0; i < j; ++i)
+            List<string> wordsList= new List<string>();
+            foreach (var item in textWords)
             {
-                if (TempText[i].Length >= 4)
+                if (item != "")
                 {
-                    TempText[i].Remove(3, 1);
-                    TempText[i].Insert(3, "#");
-                }
-                if (TempText[i].Length >= 7)
-                {
-                    TempText[i].Remove(6, 1);
-                    TempText[i].Insert(6, "#");
+                    wordsList.Add(item);
+                    Console.WriteLine(item);
                 }
             }
 
+            return wordsList.ToArray();
+        }
 
-            foreach (var item in TempText)
+        public static void Povt(string[] textWords)
+        {
+            var result = textWords.GroupBy(x => x)
+                              .Where(x => x.Count() > 1)
+                              .Select(x => new { Word = x.Key, Frequency = x.Count() });
+
+            foreach (var item in result)
             {
-                Console.WriteLine(item);
+                Console.WriteLine($"{item.Word}\t = {item.Frequency}"); ;
             }
         }
 
-        struct Words
+        private static void allWords(string[] textWords)
         {
-            string wrd;
-            int kol;
+            char[] gl = {'а','е','ё','и','о','у','ы','э','ю','я'};
+            for (int i = 0; i < textWords.Length; ++i)
+            {
+                for (int j = 0; j < gl.Length; ++j)
+                {
+                    if (!textWords[i].ToLower().ToCharArray()[0].Equals(gl[j]) && textWords[i].ToLower().ToCharArray()[textWords[i].Length - 1].Equals(gl[j]))
+                    {
+                        Console.WriteLine(textWords[i]);
+                    }
+                }
+            }
         }
 
-        public static void Povt()
+        public static void AllWords(string[] textWords)
         {
-            StringBuilder[] TempText = new StringBuilder[text.Split(' ').Length];
-            List<Words> list = new List<Words>();
-
-            string str = "";
-            int j = 0;
-            for (int i = 0; i < text.Length; ++i)
-            {
-                str += text[i];
-                if (text[i] == ' ')
-                {
-                    TempText[j] = new StringBuilder(str);
-                    j++;
-                    str = "";
-                }
-            }
-
-            for (int i = 0; i < j; ++i)
-            {
-                for (int k = i; k < j; ++i)
-                {
-
-
-                }
-            }
+            allWords(textWords);
         }
     }
 }

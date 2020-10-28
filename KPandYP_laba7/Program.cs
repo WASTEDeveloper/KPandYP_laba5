@@ -86,7 +86,10 @@ namespace KPandYP_laba7
             //Task1();
             //Task2();
             //TaskK();
-            Poem.Zam();
+            string[] textWords = Poem.Zam();
+
+            Poem.Povt(textWords);
+            Poem.AllWords(textWords);
         }
     }
 }

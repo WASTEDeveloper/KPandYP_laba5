@@ -107,5 +107,7 @@ namespace KPandYP_laba7
         {
             allWords(textWords);
         }
+
+
     }
 }
